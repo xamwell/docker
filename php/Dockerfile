@@ -1,4 +1,4 @@
-FROM php:7.2.24-fpm-alpine
+FROM php:7.2.34-fpm-alpine
 
 ENV SWOOLE_VERSION 4.4.15
 
@@ -29,7 +29,7 @@ RUN apk add --no-cache bash autoconf build-base \
     && make && make install \
     && cd .. && rm -rf v${SWOOLE_VERSION}.tar.gz swoole-src-${SWOOLE_VERSION} \
 
-    && apk del build-base autoconf
+    && apk del build-base autoconf 
 
 RUN echo "export TERM=xterm" >> /root/.bashrc \
     && rm -rf /usr/local/etc/php-fpm.conf \
@@ -37,7 +37,12 @@ RUN echo "export TERM=xterm" >> /root/.bashrc \
     && ln -s /php/php.ini /usr/local/etc/php/php.ini \
     && ln -s /php/php-fpm.conf /usr/local/etc/php-fpm.conf
 
-RUN apk add --no-cache git
+RUN apk add --no-cache git openssh-client
+
+RUN wget https://github.com/composer/composer/releases/download/1.10.16/composer.phar
+RUN chmod +x composer.phar
+RUN mv composer.phar /usr/local/bin/composer
+RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 
 WORKDIR /www
 

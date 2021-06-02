@@ -6,4 +6,4 @@ sudo tee /etc/docker/daemon.json > /dev/null << 'EOF'
 }
 EOF
 
-s docker
+sudo systemctl restart docker
